@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetoIntegrador.Backend", "ProjetoIntegrador.Backend\ProjetoIntegrador.Backend.csproj", "{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{3FB30BDE-8AC9-40EE-8B73-F3D3E2FC57EA}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CODEOWNERS = .github\CODEOWNERS
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

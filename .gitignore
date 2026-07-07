@@ -1,0 +1,10 @@
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/

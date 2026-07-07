@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{3FB3
 		.github\CODEOWNERS = .github\CODEOWNERS
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetoIntegrador.Testes", "ProjetoIntegrador.Testes\ProjetoIntegrador.Testes.csproj", "{4377AAA1-4675-44D1-979D-657EB7E72FF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,5 +19,9 @@ Global
 		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D1A5C5B-C056-4EFE-A825-7922BFEC238D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4377AAA1-4675-44D1-979D-657EB7E72FF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4377AAA1-4675-44D1-979D-657EB7E72FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4377AAA1-4675-44D1-979D-657EB7E72FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4377AAA1-4675-44D1-979D-657EB7E72FF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

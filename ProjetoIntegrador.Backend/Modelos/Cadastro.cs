@@ -67,6 +67,7 @@ public class Cadastro
         
         if (username.Length < 3 || username.Length > 20)
             throw new Exception("O Username precisa ter entre 3 a 20 caracteres!");
+        
             
         Username = username;
     }

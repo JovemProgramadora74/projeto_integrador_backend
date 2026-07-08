@@ -1,3 +1,5 @@
+using ProjetoIntegrador.Backend.Modelos;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
@@ -13,5 +15,19 @@ app.UseHttpsRedirection();
 
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
+
+app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
+{
+    try
+    {
+        var contatoEmergencia = new ContatoEmergencia(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email);
+        return Results.Created();
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new {message = e.Message});
+    }
+}).WithName("CadastrarContato"); 
+
 
 app.Run();

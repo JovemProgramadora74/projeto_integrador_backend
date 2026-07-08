@@ -7,20 +7,20 @@ public class Login
     public string Email { get; private set; } = string.Empty;
     public string Senha { get; private set; } = string.Empty;
 
-    protected Login() { }
-
     public Login(string email, string senha)
     {
-        InserirSenha(senha);
         InserirEmail(email);
+        InserirSenha(senha);
     }
+    
+    protected Login() { }
 
     private void InserirEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new Exception("E-mail deve ser informado!");
         if (!Regex.IsMatch(email, @"^[^\s@]+@[^\s@]+\.[^\s@]+$", RegexOptions.IgnoreCase))
-            throw new Exception("O e-mail inserido é invalido!");
+            throw new Exception("O e-mail inserido é inválido!");
         Email = email;
     }
 

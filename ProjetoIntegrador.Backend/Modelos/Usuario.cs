@@ -44,3 +44,9 @@ public class Usuario
         Email = email;
     }
 }
+
+public class UsuarioDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+}

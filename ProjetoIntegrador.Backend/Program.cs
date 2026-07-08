@@ -57,4 +57,18 @@ app.MapPost("/cadastrar", (CadastroDto dados) =>
     })
     .WithName("InserirDadosUsuario");
 
+app.MapPost("/usuario/info", (UsuarioDto dados) =>
+    {
+        try
+        {
+            var usuario = new Usuario(dados.Nome, dados.Email);
+            return Results.Created();
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(new { message = e.Message });
+        }
+    })
+    .WithName("InserirDadosUsuario");
+
 app.Run();

@@ -30,7 +30,7 @@ public class Cadastro
             throw new Exception("Não pode estar vazio!");
 
         if (nome.Length < 3)
-            throw new Exception("precisa ter no mínomo 3 caracteres!");
+            throw new Exception("Precisa ter no mínomo 3 caracteres!");
 
         if (Regex.IsMatch(nome, @"[^\p{L}\s]", RegexOptions.IgnoreCase))
             throw new Exception("Nome contém caracteres invalidos!");

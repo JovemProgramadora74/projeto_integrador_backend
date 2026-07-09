@@ -1,16 +1,9 @@
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ProjetoIntegrador.Backend.Modelos;
 
 public class ContatoEmergencia
 {
-    public int Id { get; private set; }
-    public string Nome { get; private set; } = string.Empty;
-    public string Vinculo { get; private set; } = string.Empty;
-    public string Telefone { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
-
     protected ContatoEmergencia()
     {
     }
@@ -22,6 +15,12 @@ public class ContatoEmergencia
         InserirTelefone(telefone);
         InserirEmail(email);
     }
+
+    public int Id { get; private set; }
+    public string Nome { get; private set; } = string.Empty;
+    public string Vinculo { get; private set; } = string.Empty;
+    public string Telefone { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
 
     private void InserirNome(string nome)
     {

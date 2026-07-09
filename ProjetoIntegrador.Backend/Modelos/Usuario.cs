@@ -4,11 +4,6 @@ namespace ProjetoIntegrador.Backend.Modelos;
 
 public class Usuario
 {
-    public int Id { get; private set; }
-    public string Nome { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
-    public DateTime CriadoEm { get; private set; }
-
     protected Usuario()
     {
     }
@@ -18,6 +13,11 @@ public class Usuario
         InserirNome(nome);
         InserirEmail(email);
     }
+
+    public int Id { get; private set; }
+    public string Nome { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public DateTime CriadoEm { get; private set; }
 
     private void InserirNome(string nome)
     {

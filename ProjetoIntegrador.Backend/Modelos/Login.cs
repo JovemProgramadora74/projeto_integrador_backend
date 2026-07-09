@@ -4,16 +4,18 @@ namespace ProjetoIntegrador.Backend.Modelos;
 
 public class Login
 {
-    public string Email { get; private set; } = string.Empty;
-    public string Senha { get; private set; } = string.Empty;
+    protected Login()
+    {
+    }
 
-    protected Login() { }
-    
     public Login(string email, string senha)
     {
         InserirEmail(email);
         InserirSenha(senha);
     }
+
+    public string Email { get; private set; } = string.Empty;
+    public string Senha { get; private set; } = string.Empty;
 
     private void InserirEmail(string email)
     {
@@ -36,6 +38,6 @@ public class Login
 
 public class LoginDto
 {
-    public string Email { get; set; }  = string.Empty;
-    public string Senha { get; set; }= string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Senha { get; set; } = string.Empty;
 }

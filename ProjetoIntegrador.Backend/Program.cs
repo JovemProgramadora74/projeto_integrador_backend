@@ -16,7 +16,7 @@ app.UseHttpsRedirection();
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
 
-app.MapPost("/login/info", (LoginDto dados) =>
+app.MapPost("/login", (LoginDto dados) =>
 {
     try
     {
@@ -27,5 +27,5 @@ app.MapPost("/login/info", (LoginDto dados) =>
     {
         return Results.BadRequest(new { message = e.Message });
     }
-}).WithName("PegarInfoServidor");
+}).WithName("FazerLogin");
 app.Run();

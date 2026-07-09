@@ -13,11 +13,10 @@ app.UseHttpsRedirection();
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
 
-app.MapPost("/login", (LoginDto dados) =>
+app.MapPost("/login", (UsuarioLoginDto dados) =>
 {
     try
     {
-        var login = new Login(dados.Email, dados.Senha);
     }
     catch (Exception e)
     {
@@ -41,11 +40,11 @@ app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
 }).WithName("CadastrarContato");
 
 
-app.MapPost("/cadastrar", (CadastroDto dados) =>
+app.MapPost("/cadastrar", (UsuarioCadastroDto dados) =>
     {
         try
         {
-            var cadastro = new Cadastro(dados.Nome, dados.Email, dados.Senha, dados.Username);
+            var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
             return Results.Created();
         }
         catch (Exception e)
@@ -54,19 +53,5 @@ app.MapPost("/cadastrar", (CadastroDto dados) =>
         }
     })
     .WithName("InserirDadosUsuario");
-
-app.MapPost("/usuario/info", (UsuarioDto dados) =>
-    {
-        try
-        {
-            var usuario = new Usuario(dados.Nome, dados.Email);
-            return Results.Created();
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(new { message = e.Message });
-        }
-    })
-    .WithName("PegarDadosUsuario");
 
 app.Run();

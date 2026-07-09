@@ -8,27 +8,32 @@ public class Usuario
     {
     }
 
-    public Usuario(string nome, string email)
+    public Usuario(string nome, string email, string senha, string username)
     {
         InserirNome(nome);
         InserirEmail(email);
+        InserirSenha(senha);
+        InserirUsername(username);
     }
 
     public int Id { get; private set; }
     public string Nome { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
+    public string Senha { get; private set; }
+    public string Username { get; private set; } = string.Empty;
     public DateTime CriadoEm { get; private set; }
+
 
     private void InserirNome(string nome)
     {
         if (string.IsNullOrWhiteSpace(nome))
-            throw new Exception("Nome do usuário não pode estar vazio!");
+            throw new Exception("Nome não pode estar vazio!");
 
         if (nome.Length < 3)
-            throw new Exception("Nome do usuário precisa de no mínimo 3 caracteres!");
+            throw new Exception("Precisa ter no mínimo 3 caracteres!");
 
         if (Regex.IsMatch(nome, @"[^\p{L}\s]", RegexOptions.IgnoreCase))
-            throw new Exception("Nome contém caracteres inválidos");
+            throw new Exception("Nome contém caracteres invalidos!");
 
         Nome = nome;
     }
@@ -36,17 +41,47 @@ public class Usuario
     private void InserirEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new Exception("O email do usuário não pode estar vazio!");
+            throw new Exception("O email não pode estar vazio!");
 
-        if (!Regex.IsMatch(email, @"^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$", RegexOptions.IgnoreCase))
-            throw new Exception("O email do usuário não é válido!");
+        if (!Regex.IsMatch(email, @"^[^\s@]+@[^\s@]+\.[^\s@]+$", RegexOptions.IgnoreCase))
+            throw new Exception("O email não é valido!");
 
         Email = email;
     }
+
+    private void InserirSenha(string senha)
+    {
+        if (string.IsNullOrWhiteSpace(senha))
+            throw new Exception("A senha não pode estar vazia!");
+
+        if (senha.Length < 8)
+            throw new Exception("A senha precisa ter no mínimo 8 caracteres!");
+
+        Senha = senha;
+    }
+
+    private void InserirUsername(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            throw new Exception("O username não pode estar vazio!");
+
+        if (username.Length < 3 || username.Length > 20)
+            throw new Exception("O username precisa ter entre 3 a 20 caracteres!");
+
+        Username = username;
+    }
 }
 
-public class UsuarioDto
+public class UsuarioCadastroDto
 {
     public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Senha { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
+}
+
+public class UsuarioLoginDto
+{
+    public string Email { get; set; } = string.Empty;
+    public string Senha { get; set; } = string.Empty;
 }

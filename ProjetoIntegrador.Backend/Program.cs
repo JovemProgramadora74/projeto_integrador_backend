@@ -1,8 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Modelos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql("");
+});
 
 var app = builder.Build();
 

@@ -2,13 +2,13 @@ using System.Text.RegularExpressions;
 
 namespace ProjetoIntegrador.Backend.Modelos;
 
-public class ContatoEmergencia
+public class Contato
 {
-    protected ContatoEmergencia()
+    protected Contato()
     {
     }
 
-    public ContatoEmergencia(string nome, string vinculo, string telefone, string email)
+    public Contato(string nome, string vinculo, string telefone, string email)
     {
         InserirNome(nome);
         InserirVinculo(vinculo);
@@ -60,7 +60,7 @@ public class ContatoEmergencia
     }
 }
 
-public class ContatoEmergenciaDto
+public class ContatoDto
 {
     public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

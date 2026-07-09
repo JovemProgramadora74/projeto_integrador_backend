@@ -26,11 +26,11 @@ app.MapPost("/login", (UsuarioLoginDto dados) =>
     return Results.Created();
 }).WithName("FazerLogin");
 
-app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
+app.MapPost("/contato/cadastrar", (ContatoDto dados) =>
 {
     try
     {
-        var contatoEmergencia = new ContatoEmergencia(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email);
+        var contatoEmergencia = new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email);
         return Results.Created();
     }
     catch (Exception e)
@@ -53,5 +53,26 @@ app.MapPost("/cadastrar", (UsuarioCadastroDto dados) =>
         }
     })
     .WithName("InserirDadosUsuario");
+
+app.MapPost("/alerta", (AlertaDto dados) =>
+{
+    try
+    {
+        var novoAlerta = new Alerta(
+            dados.IdUsuario,
+            DateTime.UtcNow, 
+            dados.Latitude,
+            dados.Longitude,
+            dados.PrecisaoGps,
+            dados.Status
+        );
+        
+        return Results.Created();
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new { message = e.Message });
+    }
+}).WithName("DispararAlerta");
 
 app.Run();

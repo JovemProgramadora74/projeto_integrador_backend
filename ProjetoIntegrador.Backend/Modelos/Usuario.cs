@@ -30,7 +30,7 @@ public class Usuario
             throw new Exception("Nome não pode estar vazio!");
 
         if (nome.Length < 3)
-            throw new Exception("Precisa ter no mínimo 3 caracteres!");
+            throw new Exception("Nome precisa ter no mínimo 3 caracteres!");
 
         if (Regex.IsMatch(nome, @"[^\p{L}\s]", RegexOptions.IgnoreCase))
             throw new Exception("Nome contém caracteres invalidos!");

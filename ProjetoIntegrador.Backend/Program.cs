@@ -16,6 +16,18 @@ app.UseHttpsRedirection();
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
 
+app.MapPost("/login", (LoginDto dados) =>
+{
+    try
+    {
+        var login = new Login(dados.Email, dados.Senha);
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new { message = e.Message });
+    }
+}).WithName("FazerLogin");
+
 app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
 {
     try

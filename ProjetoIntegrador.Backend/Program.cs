@@ -42,4 +42,19 @@ app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
 }).WithName("CadastrarContato"); 
 
 
+
+app.MapPost("/cadastrar", (CadastroDto dados) =>
+    {
+        try
+        {
+            var cadastro = new Cadastro(dados.Nome, dados.Email, dados.Senha, dados.Username);
+            return Results.Created();
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(new{message = e.Message});
+        }
+    })
+    .WithName("InserirDadosUsuario");
+
 app.Run();

@@ -21,11 +21,25 @@ app.MapPost("/login", (LoginDto dados) =>
     try
     {
         var login = new Login(dados.Email, dados.Senha);
-        return Results.Created();
     }
     catch (Exception e)
     {
         return Results.BadRequest(new { message = e.Message });
     }
 }).WithName("FazerLogin");
+
+app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
+{
+    try
+    {
+        var contatoEmergencia = new ContatoEmergencia(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email);
+        return Results.Created();
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(new {message = e.Message});
+    }
+}).WithName("CadastrarContato"); 
+
+
 app.Run();

@@ -6,10 +6,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.UseHttpsRedirection();
 
@@ -26,6 +23,8 @@ app.MapPost("/login", (LoginDto dados) =>
     {
         return Results.BadRequest(new { message = e.Message });
     }
+
+    return Results.Created();
 }).WithName("FazerLogin");
 
 app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
@@ -37,10 +36,9 @@ app.MapPost("/contato/cadastrar", (ContatoEmergenciaDto dados) =>
     }
     catch (Exception e)
     {
-        return Results.BadRequest(new {message = e.Message});
+        return Results.BadRequest(new { message = e.Message });
     }
-}).WithName("CadastrarContato"); 
-
+}).WithName("CadastrarContato");
 
 
 app.MapPost("/cadastrar", (CadastroDto dados) =>
@@ -52,9 +50,23 @@ app.MapPost("/cadastrar", (CadastroDto dados) =>
         }
         catch (Exception e)
         {
-            return Results.BadRequest(new{message = e.Message});
+            return Results.BadRequest(new { message = e.Message });
         }
     })
     .WithName("InserirDadosUsuario");
+
+app.MapPost("/usuario/info", (UsuarioDto dados) =>
+    {
+        try
+        {
+            var usuario = new Usuario(dados.Nome, dados.Email);
+            return Results.Created();
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(new { message = e.Message });
+        }
+    })
+    .WithName("PegarDadosUsuario");
 
 app.Run();

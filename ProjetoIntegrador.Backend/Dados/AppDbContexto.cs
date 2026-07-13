@@ -9,11 +9,14 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Usuario>().Property("Nome").HasColumnType("varchar").HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<Usuario>().Property("Email").HasColumnType("varchar").HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<Usuario>().HasIndex("Email").IsUnique();
-        modelBuilder.Entity<Usuario>().Property("Senha").HasColumnType("varchar").HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<Usuario>().Property("Username").HasColumnType("varchar").HasMaxLength(30).IsRequired();
-        modelBuilder.Entity<Usuario>().HasIndex("Username").IsUnique();
+        modelBuilder.Entity<Usuario>(entidade =>
+        {
+             entidade.Property("Nome").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+             entidade.Property("Email").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+             entidade.HasIndex("Email").IsUnique();
+             entidade.Property("Senha").HasColumnType("varchar").HasMaxLength(255).IsRequired();
+             entidade.Property("Username").HasColumnType("varchar").HasMaxLength(30).IsRequired();
+             entidade.HasIndex("Username").IsUnique();
+        });
     }
 }

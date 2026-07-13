@@ -1,19 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Backend.Modelos;
 
 namespace ProjetoIntegrador.Backend.Dados;
 
 public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(options)
 {
+    public DbSet<Contato> Contatos { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Usuario>().Property("Nome").HasColumnType("varchar").HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<Usuario>().Property("Email").HasColumnType("varchar").HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<Usuario>().HasIndex("Email").IsUnique();
-        modelBuilder.Entity<Usuario>().Property("Senha").HasColumnType("varchar").HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<Usuario>().Property("Username").HasColumnType("varchar").HasMaxLength(30).IsRequired();
-        modelBuilder.Entity<Usuario>().HasIndex("Username").IsUnique();
+        modelBuilder.Entity<Contato>(entity =>
+        {
+            entity.Property("Nome").HasColumnType("varchar(100)").IsRequired();
+            entity.Property("Vinculo").HasColumnType("varchar(100)").IsRequired();
+            entity.Property("Telefone").HasColumnType("varchar(11)").IsRequired();
+            entity.HasIndex("Telefone").IsUnique();
+            entity.Property("Email").HasColumnType("varchar(255)").IsRequired();
+            entity.HasIndex("Email").IsUnique();
+        });
+
+        modelBuilder.Entity<Usuario>(entidade =>
+        {
+            entidade.Property("Nome").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+            entidade.Property("Email").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+            entidade.HasIndex("Email").IsUnique();
+            entidade.Property("Senha").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+            entidade.Property("Username").HasColumnType("varchar").HasMaxLength(30).IsRequired();
+            entidade.HasIndex("Username").IsUnique();
+        });
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace ProjetoIntegrador.Backend.Modelos;
+﻿using ProjetoIntegrador.Backend.Enums;
+
+namespace ProjetoIntegrador.Backend.Modelos;
 
 public class Alerta
 {
@@ -8,9 +10,11 @@ public class Alerta
     public decimal Latitude { get; private set; }
     public decimal Longitude { get; private set; }
     public decimal PrecisaoGps { get; private set; }
-    public string Status { get; private set; } = "ATIVO";
-    
-    protected Alerta(){}
+    public Status Status { get; private set; } = Status.Ativo;
+
+    protected Alerta()
+    {
+    }
 
     public Alerta(
         int idUsuario,
@@ -18,7 +22,7 @@ public class Alerta
         decimal latitude,
         decimal longitude,
         decimal precisaoGps,
-        string? status = "ativo")
+        Status? status)
     {
         InserirIdUsuario(idUsuario);
         InserirDataHoraDisparo(dataHoraDisparo);
@@ -30,7 +34,7 @@ public class Alerta
 
     private void InserirIdUsuario(int idUsuario)
     {
-        if (idUsuario <= 0) 
+        if (idUsuario <= 0)
             throw new Exception("O ID do usuário deve ser maior que zero.");
         IdUsuario = idUsuario;
     }
@@ -67,28 +71,28 @@ public class Alerta
         PrecisaoGps = precisaoGps;
     }
 
-    private void InserirStatus(string? status)
+    private void InserirStatus(Status? status)
     {
-        if (string.IsNullOrWhiteSpace(status))
+        switch (status)
         {
-            Status = "ATIVO";
-            return;
+            case Status.FalsoAlarme:
+                Status = Status.FalsoAlarme;
+                break;
+            case Status.Atendido:
+                Status = Status.Atendido;
+                break;
+            default:
+                Status = Status.Ativo;
+                break;
         }
-
-        status = status.ToUpper();
-        
-        if (status != "ATIVO" && status != "ATENDIDO" && status != "FALSO ALARME")
-            throw new Exception($"Status '{status}' é inválido. Use: ATIVO, ATENDIDO ou FALSO ALARME.");
-
-        Status = status;
     }
 }
 
 public class AlertaDto
 {
     public int IdUsuario { get; set; }
-    public decimal Latitude { get; set; } 
-    public decimal Longitude{ get; set; } 
-    public decimal PrecisaoGps{ get; set; } 
-    public string? Status { get; set; }
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
+    public decimal PrecisaoGps { get; set; }
+    public Status? Status { get; set; }
 }

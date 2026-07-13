@@ -6,6 +6,7 @@ namespace ProjetoIntegrador.Backend.Dados;
 public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(options)
 {
     public DbSet<Contato> Contatos { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,6 +18,16 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
             entity.HasIndex("Telefone").IsUnique();
             entity.Property("Email").HasColumnType("varchar(255)").IsRequired();
             entity.HasIndex("Email").IsUnique();
+        });
+
+        modelBuilder.Entity<Usuario>(entidade =>
+        {
+            entidade.Property("Nome").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+            entidade.Property("Email").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+            entidade.HasIndex("Email").IsUnique();
+            entidade.Property("Senha").HasColumnType("varchar").HasMaxLength(100).IsRequired();
+            entidade.Property("Username").HasColumnType("varchar").HasMaxLength(30).IsRequired();
+            entidade.HasIndex("Username").IsUnique();
         });
     }
 }

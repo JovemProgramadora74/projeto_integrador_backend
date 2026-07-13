@@ -22,10 +22,10 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
         });
             modelBuilder.Entity<Alerta>(entidade =>
             {
-            entidade.Property("latitude").HasColumnType("decimal(10,8)").IsRequired();
-            entidade.Property("longitude").HasColumnType("decimal(10,8)").IsRequired();
-            entidade.Property("precisaogps").HasColumnType("decimal(10,8)").IsRequired();
-            entidade.Property("status").HasColumnType("varshar(10)").IsRequired();
+            entidade.Property("Latitude").HasColumnType("decimal(10,8)").IsRequired();
+            entidade.Property("Longitude").HasColumnType("decimal(10,8)").IsRequired();
+            entidade.Property("PrecisaoGps").HasColumnType("decimal(10,8)").IsRequired();
+            entidade.Property("Status").HasConversion<string>().IsRequired();
         });
 
         modelBuilder.Entity<Usuario>(entidade =>

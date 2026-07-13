@@ -6,9 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+var stringConexao = Environment.GetEnvironmentVariable("POSTGRES_URI");
+
+ArgumentNullException.ThrowIfNull(stringConexao);
+
 builder.Services.AddDbContext<AppDbContexto>(options =>
 {
-    options.UseNpgsql("");
+    options.UseNpgsql(stringConexao);
 });
 
 var app = builder.Build();

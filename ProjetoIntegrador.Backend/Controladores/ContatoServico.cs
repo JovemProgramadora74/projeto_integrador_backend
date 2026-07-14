@@ -3,11 +3,11 @@ using ProjetoIntegrador.Backend.Modelos;
 
 namespace ProjetoIntegrador.Backend.Controladores;
 
-public class ContatoServico (AppDbContexto _contexto)
+public class ContatoServico (AppDbContexto contexto)
 {
     public async Task AddAsync(Contato contato)
     {
-        await _contexto.Contatos.AddAsync(contato);
-        await _contexto.SaveChangesAsync();
+        await contexto.Contatos.AddAsync(contato);
+        await contexto.SaveChangesAsync();
     }
 }

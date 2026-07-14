@@ -17,7 +17,6 @@ builder.Services.AddDbContext<AppDbContexto>(options =>
 });
 
 builder.Services.AddScoped<UsuarioServico>();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) app.MapOpenApi();
@@ -56,11 +55,12 @@ app.MapPost("/contato/cadastrar", (ContatoDto dados) =>
 }).WithName("CadastrarContato");
 
 
-app.MapPost("/cadastrar", (UsuarioCadastroDto dados) =>
+app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico) =>
     {
         try
         {
             var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
+            await servico.AddAsync(cadastro);
             return Results.Created();
         }
         catch (Exception e)

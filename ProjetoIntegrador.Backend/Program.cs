@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Backend.Controladores;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Modelos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-
 var stringConexao = Environment.GetEnvironmentVariable("POSTGRES_URI");
 
 ArgumentNullException.ThrowIfNull(stringConexao);
@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContexto>(options =>
     options.UseNpgsql(stringConexao);
 });
 
+builder.Services.AddScoped<UsuarioServico>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) app.MapOpenApi();
@@ -28,6 +29,7 @@ app.MapPost("/login", (UsuarioLoginDto dados) =>
 {
     try
     {
+        return Results.Created();
     }
     catch (Exception e)
     {
@@ -51,11 +53,12 @@ app.MapPost("/contato/cadastrar", (ContatoDto dados) =>
 }).WithName("CadastrarContato");
 
 
-app.MapPost("/cadastrar", (UsuarioCadastroDto dados) =>
+app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico) =>
     {
         try
         {
             var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
+            await servico.AddAsync(cadastro);
             return Results.Created();
         }
         catch (Exception e)

@@ -6,6 +6,7 @@ using ProjetoIntegrador.Backend.Modelos;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
 var stringConexao = Environment.GetEnvironmentVariable("POSTGRES_URI");
 
 ArgumentNullException.ThrowIfNull(stringConexao);
@@ -25,11 +26,12 @@ app.UseHttpsRedirection();
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
 
-app.MapPost("/login", (UsuarioLoginDto dados) =>
+app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
     try
     {
-        return Results.Created();
+        await servico.LoginAsync(dados);
+        return Results.Ok();
     }
     catch (Exception e)
     {
@@ -58,7 +60,6 @@ app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico
         try
         {
             var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
-            await servico.AddAsync(cadastro);
             return Results.Created();
         }
         catch (Exception e)

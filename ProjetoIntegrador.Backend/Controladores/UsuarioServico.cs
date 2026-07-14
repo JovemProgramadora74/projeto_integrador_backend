@@ -1,14 +1,25 @@
-﻿using ProjetoIntegrador.Backend.Dados;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Modelos;
 
 namespace ProjetoIntegrador.Backend.Controladores;
 
-public class UsuarioServico(AppDbContexto _contexto)
+public class UsuarioServico(AppDbContexto contexto)
 {
     public async Task AddAsync(Usuario dados)
     {
-     await   _contexto.Usuarios.AddAsync(dados);
-     await _contexto.SaveChangesAsync();
-     
+        await contexto.Usuarios.AddAsync(dados);
+        await contexto.SaveChangesAsync();
+    }
+
+    public async Task<Usuario> LoginAsync(UsuarioLoginDto dados)
+    {
+        var usuarioBanco = await contexto.Usuarios.FirstOrDefaultAsync(x => x.Email == dados.Email);
+
+        if (usuarioBanco == null) throw new Exception("Usuário não foi encontrado!");
+
+        if (usuarioBanco.Senha != dados.Senha) throw new Exception("Senha incorreta!");
+
+        return usuarioBanco;
     }
 }

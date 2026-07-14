@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContexto>(options =>
     options.UseNpgsql(stringConexao);
 });
 
+builder.Services.AddScoped<ContatoServico>();
+
 builder.Services.AddScoped<UsuarioServico>();
 var app = builder.Build();
 
@@ -41,11 +43,12 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
     return Results.Created();
 }).WithName("FazerLogin");
 
-app.MapPost("/contato/cadastrar", (ContatoDto dados) =>
+app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servico) =>
 {
     try
     {
         var contatoEmergencia = new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email);
+        await servico.AddAsync(contatoEmergencia);
         return Results.Created();
     }
     catch (Exception e)

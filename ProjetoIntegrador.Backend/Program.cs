@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ProjetoIntegrador.Backend.Controladores;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Modelos;
+using ProjetoIntegrador.Backend.Servicos;
 
 var builder = WebApplication.CreateBuilder(args);
 

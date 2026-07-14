@@ -1,7 +1,7 @@
 ﻿using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Modelos;
 
-namespace ProjetoIntegrador.Backend.Controladores;
+namespace ProjetoIntegrador.Backend.Servicos;
 
 public class AlertaServico (AppDbContexto contexto)
 {

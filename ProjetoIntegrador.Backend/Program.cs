@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Backend.Controladores;
 using ProjetoIntegrador.Backend.Dados;
+using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Modelos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+
 
 var stringConexao = Environment.GetEnvironmentVariable("POSTGRES_URI");
 
@@ -15,6 +18,8 @@ builder.Services.AddDbContext<AppDbContexto>(options =>
 {
     options.UseNpgsql(stringConexao);
 });
+
+builder.Services.AddScoped<AlertaServico>();
 
 builder.Services.AddScoped<ContatoServico>();
 
@@ -73,19 +78,12 @@ app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico
     })
     .WithName("InserirDadosUsuario");
 
-app.MapPost("/alerta", (AlertaDto dados) =>
+app.MapPost("/alerta", async (AlertaDto dados, AlertaServico servico) =>
 {
     try
     {
-        var novoAlerta = new Alerta(
-            dados.IdUsuario,
-            DateTime.UtcNow, 
-            dados.Latitude,
-            dados.Longitude,
-            dados.PrecisaoGps,
-            dados.Status
-        );
-        
+        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow  , dados.Latitude, dados.Longitude,dados.PrecisaoGps, Status.Ativo);
+        await servico.AddAsync(alertaDados);
         return Results.Created();
     }
     catch (Exception e)

@@ -60,6 +60,7 @@ app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico
         try
         {
             var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
+            await servico.AddAsync(cadastro);
             return Results.Created();
         }
         catch (Exception e)

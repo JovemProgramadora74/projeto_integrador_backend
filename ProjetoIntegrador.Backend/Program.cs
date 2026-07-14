@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Backend.Controladores;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Modelos;
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<AppDbContexto>(options =>
     options.UseNpgsql(stringConexao);
 });
 
+builder.Services.AddScoped<UsuarioServico>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) app.MapOpenApi();
@@ -24,10 +27,12 @@ app.UseHttpsRedirection();
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
 
-app.MapPost("/login", (UsuarioLoginDto dados) =>
+app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
     try
     {
+        await servico.LoginAsync(dados);
+        return Results.Ok();
     }
     catch (Exception e)
     {

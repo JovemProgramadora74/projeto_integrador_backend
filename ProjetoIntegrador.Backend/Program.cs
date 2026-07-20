@@ -42,8 +42,6 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
     {
         return Results.BadRequest(new { message = e.Message });
     }
-
-    return Results.Created();
 }).WithName("FazerLogin");
 
 app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servico) =>
@@ -61,7 +59,7 @@ app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servic
 }).WithName("CadastrarContato");
 
 
-app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico) =>
+app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servico) =>
     {
         try
         {
@@ -80,7 +78,8 @@ app.MapPost("/alerta", async (AlertaDto dados, AlertaServico servico) =>
 {
     try
     {
-        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow  , dados.Latitude, dados.Longitude,dados.PrecisaoGps, Status.Ativo);
+        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow, dados.Latitude, dados.Longitude,
+            dados.PrecisaoGps, Status.Ativo);
         await servico.AddAsync(alertaDados);
         return Results.Created();
     }

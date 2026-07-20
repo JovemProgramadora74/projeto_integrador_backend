@@ -21,7 +21,7 @@ public class Usuario
     public string Email { get; private set; } = string.Empty;
     public string Senha { get; private set; }
     public string Username { get; private set; } = string.Empty;
-    public DateTime CriadoEm { get; private set; }
+    public DateTime CriadoEm { get; private set; } =  DateTime.UtcNow;
 
 
     private void InserirNome(string nome)

@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Modelos;
@@ -37,8 +39,13 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
     try
     {
-        await servico.LoginAsync(dados);
-        return Results.Ok();
+        var usuario = await servico.LoginAsync(dados);
+        return Results.Ok(new
+        {
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email
+        });
     }
     catch (Exception e)
     {

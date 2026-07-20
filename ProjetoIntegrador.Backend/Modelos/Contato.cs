@@ -67,7 +67,7 @@ public class Contato
 
     private void InserirIdUsuario(int idUsuario)
     {
-        if (idUsuario <= 0) throw new Exception("Id inválido!");
+        if (idUsuario <= 0) throw new Exception("Id do usuário inválido!");
         
         IdUsuario = idUsuario;
     }

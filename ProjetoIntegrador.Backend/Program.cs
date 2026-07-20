@@ -35,8 +35,13 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
     try
     {
-        await servico.LoginAsync(dados);
-        return Results.Ok();
+        var usuario = await servico.LoginAsync(dados);
+        return Results.Ok(new
+        {
+            usuario.Id,
+            usuario.Nome,
+            usuario.Email
+        });
     }
     catch (Exception e)
     {

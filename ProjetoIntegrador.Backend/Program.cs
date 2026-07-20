@@ -9,15 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 
-
 var stringConexao = Environment.GetEnvironmentVariable("POSTGRES_URI");
 
 ArgumentNullException.ThrowIfNull(stringConexao);
 
-builder.Services.AddDbContext<AppDbContexto>(options =>
-{
-    options.UseNpgsql(stringConexao);
-});
+builder.Services.AddDbContext<AppDbContexto>(options => { options.UseNpgsql(stringConexao); });
 
 builder.Services.AddScoped<AlertaServico>();
 
@@ -44,8 +40,6 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
     {
         return Results.BadRequest(new { message = e.Message });
     }
-
-    return Results.Created();
 }).WithName("FazerLogin");
 
 app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servico) =>
@@ -63,7 +57,7 @@ app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servic
 }).WithName("CadastrarContato");
 
 
-app.MapPost("/cadastrar", async (UsuarioCadastroDto dados,UsuarioServico servico) =>
+app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servico) =>
     {
         try
         {
@@ -82,7 +76,8 @@ app.MapPost("/alerta", async (AlertaDto dados, AlertaServico servico) =>
 {
     try
     {
-        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow  , dados.Latitude, dados.Longitude,dados.PrecisaoGps, Status.Ativo);
+        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow, dados.Latitude, dados.Longitude,
+            dados.PrecisaoGps, Status.Ativo);
         await servico.AddAsync(alertaDados);
         return Results.Created();
     }

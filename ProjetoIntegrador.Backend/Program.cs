@@ -8,15 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-
-
-var stringConexao = Environment.GetEnvironmentVariable("POSTGRES_URI");
+var stringConexao = Environment.GetEnvironmentVariable("MYSQL_URL");
 
 ArgumentNullException.ThrowIfNull(stringConexao);
 
 builder.Services.AddDbContext<AppDbContexto>(options =>
 {
-    options.UseNpgsql(stringConexao);
+    options.UseMySQL(stringConexao);
 });
 
 builder.Services.AddScoped<AlertaServico>();

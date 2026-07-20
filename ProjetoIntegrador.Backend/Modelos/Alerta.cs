@@ -6,6 +6,7 @@ public class Alerta
 {
     public int Id { get; private set; }
     public int IdUsuario { get; private set; }
+
     public DateTime DataHoraDisparo { get; private set; } = DateTime.UtcNow;
     public decimal Latitude { get; private set; }
     public decimal Longitude { get; private set; }

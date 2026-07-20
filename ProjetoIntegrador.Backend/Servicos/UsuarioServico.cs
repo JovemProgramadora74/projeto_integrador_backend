@@ -8,6 +8,12 @@ public class UsuarioServico(AppDbContexto contexto)
 {
     public async Task AddAsync(Usuario dados)
     {
+        var emailExiste = await contexto.Usuarios.AnyAsync(x => x.Email == dados.Email);
+        if (emailExiste) throw new Exception("Este e-mail já está cadastrado por outro usuário!");
+
+        var usernameExiste = await contexto.Usuarios.AnyAsync(x => x.Username == dados.Username);
+        if (usernameExiste) throw new Exception("Este nome de usuário já está em uso!");
+        
         await contexto.Usuarios.AddAsync(dados);
         await contexto.SaveChangesAsync();
     }

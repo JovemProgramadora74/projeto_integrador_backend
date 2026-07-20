@@ -52,7 +52,7 @@ app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servic
 {
     try
     {
-        var contatoEmergencia = new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email);
+        var contatoEmergencia = new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email, dados.IdUsuario);
         await servico.AddAsync(contatoEmergencia);
         return Results.Created();
     }

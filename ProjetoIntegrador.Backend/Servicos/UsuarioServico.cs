@@ -24,7 +24,9 @@ public class UsuarioServico(AppDbContexto contexto)
 
         if (usuario == null) throw new Exception("Usuário não foi encontrado!");
 
-        if (usuario.Senha != dados.Senha) throw new Exception("Senha incorreta!");
+        bool isValid = BCrypt.Net.BCrypt.Verify(dados.Senha, usuario.Senha);
+        
+        if (!isValid) throw new Exception("Senha incorreta!");
 
         return usuario;
     }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Modelos;
@@ -36,8 +37,16 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
     try
     {
-        await servico.LoginAsync(dados);
-        return Results.Ok();
+        var usuario = await servico.LoginAsync(dados);
+        var resultado = TokenServico.CriarToken(usuario);
+        return Results.Ok(new
+        {
+            usuario.Id,
+            usuario.Nome,
+            usuario.Email,
+            resultado.Token,
+            resultado.ExpiresAt
+        });
     }
     catch (Exception e)
     {
@@ -91,3 +100,4 @@ app.MapPost("/alerta", async (AlertaDto dados, AlertaServico servico) =>
 }).WithName("DispararAlerta");
 
 app.Run();
+

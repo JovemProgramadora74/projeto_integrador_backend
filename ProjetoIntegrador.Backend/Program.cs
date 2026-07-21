@@ -62,14 +62,9 @@ app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servic
 
 app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servico) =>
     {
-        var cost = 16;
-        string password = dados.Senha;
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, workFactor: cost);
-        
-        
         try
         {
-            var cadastro = new Usuario(dados.Nome, dados.Email, hashedPassword, dados.Username);
+            var cadastro = new Usuario(dados.Nome, dados.Email,dados.Senha, dados.Username);
             await servico.AddAsync(cadastro);
             return Results.Created();
         }

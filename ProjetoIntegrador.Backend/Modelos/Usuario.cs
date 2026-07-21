@@ -57,7 +57,10 @@ public class Usuario
         if (senha.Length < 8)
             throw new Exception("A senha precisa ter no mínimo 8 caracteres!");
 
-        Senha = senha;
+        var cost = 16;
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(senha, workFactor: cost);
+        
+        Senha = hashedPassword;
     }
 
     private void InserirUsername(string username)

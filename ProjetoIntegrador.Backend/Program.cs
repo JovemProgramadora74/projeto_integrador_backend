@@ -3,6 +3,7 @@ using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Modelos;
 using ProjetoIntegrador.Backend.Servicos;
+using BCrypt.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,13 +36,8 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
     try
     {
-        var usuario = await servico.LoginAsync(dados);
-        return Results.Ok(new
-        {
-            usuario.Id,
-            usuario.Nome,
-            usuario.Email
-        });
+        await servico.LoginAsync(dados);
+        return Results.Ok();
     }
     catch (Exception e)
     {
@@ -68,7 +64,7 @@ app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servic
     {
         try
         {
-            var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
+            var cadastro = new Usuario(dados.Nome, dados.Email,dados.Senha, dados.Username);
             await servico.AddAsync(cadastro);
             return Results.Created();
         }

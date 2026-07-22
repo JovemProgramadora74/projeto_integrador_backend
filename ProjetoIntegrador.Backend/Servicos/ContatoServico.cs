@@ -3,7 +3,7 @@ using ProjetoIntegrador.Backend.Modelos;
 
 namespace ProjetoIntegrador.Backend.Servicos;
 
-public class ContatoServico (AppDbContexto contexto)
+public class ContatoServico(AppDbContexto contexto)
 {
     public async Task AddAsync(Contato contato)
     {

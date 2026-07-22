@@ -4,15 +4,6 @@ namespace ProjetoIntegrador.Backend.Modelos;
 
 public class Alerta
 {
-    public int Id { get; private set; }
-    public int IdUsuario { get; private set; }
-    public Usuario Usuario { get; private set; } = null!;
-    public DateTime DataHoraDisparo { get; private set; } = DateTime.UtcNow;
-    public decimal Latitude { get; private set; }
-    public decimal Longitude { get; private set; }
-    public decimal PrecisaoGps { get; private set; }
-    public Status Status { get; private set; } = Status.Ativo;
-
     protected Alerta()
     {
     }
@@ -33,11 +24,20 @@ public class Alerta
         InserirStatus(status);
     }
 
+    public int Id { get; private set; }
+    public int UsuarioId { get; private set; }
+    public Usuario Usuario { get; private set; } = null!;
+    public DateTime DataHoraDisparo { get; private set; } = DateTime.UtcNow;
+    public decimal Latitude { get; private set; }
+    public decimal Longitude { get; private set; }
+    public decimal PrecisaoGps { get; private set; }
+    public Status Status { get; private set; } = Status.Ativo;
+
     private void InserirIdUsuario(int idUsuario)
     {
         if (idUsuario <= 0)
             throw new Exception("O ID do usuário deve ser maior que zero.");
-        IdUsuario = idUsuario;
+        UsuarioId = idUsuario;
     }
 
     private void InserirDataHoraDisparo(DateTime dataHoraDisparo)

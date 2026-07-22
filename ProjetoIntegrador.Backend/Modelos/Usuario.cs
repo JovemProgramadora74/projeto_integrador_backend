@@ -21,7 +21,7 @@ public class Usuario
     public string Email { get; private set; } = string.Empty;
     public string Senha { get; private set; }
     public string Username { get; private set; } = string.Empty;
-    public DateTime CriadoEm { get; private set; } =  DateTime.UtcNow;
+    public DateTime CriadoEm { get; private set; } = DateTime.UtcNow;
 
 
     private void InserirNome(string nome)
@@ -58,8 +58,8 @@ public class Usuario
             throw new Exception("A senha precisa ter no mínimo 8 caracteres!");
 
         var cost = 16;
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(senha, workFactor: cost);
-        
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(senha, cost);
+
         Senha = hashedPassword;
     }
 

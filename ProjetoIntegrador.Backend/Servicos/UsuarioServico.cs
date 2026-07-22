@@ -13,7 +13,7 @@ public class UsuarioServico(AppDbContexto contexto)
 
         var usernameExiste = await contexto.Usuarios.AnyAsync(x => x.Username == dados.Username);
         if (usernameExiste) throw new Exception("Este nome de usuário já está em uso!");
-        
+
         await contexto.Usuarios.AddAsync(dados);
         await contexto.SaveChangesAsync();
     }
@@ -24,8 +24,8 @@ public class UsuarioServico(AppDbContexto contexto)
 
         if (usuario == null) throw new Exception("Usuário não foi encontrado!");
 
-        bool isValid = BCrypt.Net.BCrypt.Verify(dados.Senha, usuario.Senha);
-        
+        var isValid = BCrypt.Net.BCrypt.Verify(dados.Senha, usuario.Senha);
+
         if (!isValid) throw new Exception("Senha incorreta!");
 
         return usuario;

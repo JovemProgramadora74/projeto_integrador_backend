@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
 namespace ProjetoIntegrador.Backend.Modelos;
@@ -9,7 +8,7 @@ public class Contato
     {
     }
 
-    public Contato(string nome, string vinculo, string telefone, string email, int idUsuario) 
+    public Contato(string nome, string vinculo, string telefone, string email, int idUsuario)
     {
         InserirNome(nome);
         InserirVinculo(vinculo);
@@ -23,10 +22,8 @@ public class Contato
     public string Vinculo { get; private set; } = string.Empty;
     public string Telefone { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
-    public int IdUsuario { get; private set; }
-
-    [ForeignKey(nameof(IdUsuario))]
-    public Usuario Usuario { get; private set; }
+    public int UsuarioId { get; private set; }
+    public Usuario Usuario { get; private set; } = null!;
 
     private void InserirNome(string nome)
     {
@@ -68,8 +65,8 @@ public class Contato
     private void InserirIdUsuario(int idUsuario)
     {
         if (idUsuario <= 0) throw new Exception("Id do usuário inválido!");
-        
-        IdUsuario = idUsuario;
+
+        UsuarioId = idUsuario;
     }
 }
 
@@ -79,5 +76,5 @@ public class ContatoDto
     public string Email { get; set; } = string.Empty;
     public string Vinculo { get; set; } = string.Empty;
     public string Telefone { get; set; } = string.Empty;
-    public int IdUsuario { get;  set; }
+    public int IdUsuario { get; set; }
 }

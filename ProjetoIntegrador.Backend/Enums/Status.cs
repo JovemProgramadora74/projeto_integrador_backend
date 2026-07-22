@@ -2,7 +2,7 @@
 
 public enum Status
 {
-    Ativo ,
+    Ativo,
     Atendido,
     FalsoAlarme
 }

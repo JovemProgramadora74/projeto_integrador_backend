@@ -5,29 +5,27 @@
 namespace ProjetoIntegrador.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AdicionaRelacionamentoEntreTabela : Migration
+    public partial class AdicionaRelacionamentoUsuarioContatoUsuarioAlerta : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.RenameColumn(
                 name: "IdUsuario",
-                table: "Contatos",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                table: "Alertas",
+                newName: "UsuarioId");
 
             migrationBuilder.AddColumn<int>(
                 name: "UsuarioId",
-                table: "Alertas",
+                table: "Contatos",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contatos_IdUsuario",
+                name: "IX_Contatos_UsuarioId",
                 table: "Contatos",
-                column: "IdUsuario");
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alertas_UsuarioId",
@@ -43,9 +41,9 @@ namespace ProjetoIntegrador.Backend.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Contatos_Usuarios_IdUsuario",
+                name: "FK_Contatos_Usuarios_UsuarioId",
                 table: "Contatos",
-                column: "IdUsuario",
+                column: "UsuarioId",
                 principalTable: "Usuarios",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
@@ -59,11 +57,11 @@ namespace ProjetoIntegrador.Backend.Migrations
                 table: "Alertas");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Contatos_Usuarios_IdUsuario",
+                name: "FK_Contatos_Usuarios_UsuarioId",
                 table: "Contatos");
 
             migrationBuilder.DropIndex(
-                name: "IX_Contatos_IdUsuario",
+                name: "IX_Contatos_UsuarioId",
                 table: "Contatos");
 
             migrationBuilder.DropIndex(
@@ -71,12 +69,13 @@ namespace ProjetoIntegrador.Backend.Migrations
                 table: "Alertas");
 
             migrationBuilder.DropColumn(
-                name: "IdUsuario",
+                name: "UsuarioId",
                 table: "Contatos");
 
-            migrationBuilder.DropColumn(
+            migrationBuilder.RenameColumn(
                 name: "UsuarioId",
-                table: "Alertas");
+                table: "Alertas",
+                newName: "IdUsuario");
         }
     }
 }

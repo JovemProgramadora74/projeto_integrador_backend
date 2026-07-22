@@ -28,9 +28,6 @@ namespace ProjetoIntegrador.Backend.Migrations
                     b.Property<DateTime>("DataHoraDisparo")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("IdUsuario")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Latitude")
                         .HasPrecision(10, 8)
                         .HasColumnType("decimal(10,8)");
@@ -67,9 +64,6 @@ namespace ProjetoIntegrador.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("IdUsuario")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
@@ -77,6 +71,9 @@ namespace ProjetoIntegrador.Backend.Migrations
                     b.Property<string>("Telefone")
                         .IsRequired()
                         .HasColumnType("varchar(11)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Vinculo")
                         .IsRequired()
@@ -87,10 +84,10 @@ namespace ProjetoIntegrador.Backend.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("IdUsuario");
-
                     b.HasIndex("Telefone")
                         .IsUnique();
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Contatos");
                 });
@@ -150,7 +147,7 @@ namespace ProjetoIntegrador.Backend.Migrations
                 {
                     b.HasOne("ProjetoIntegrador.Backend.Modelos.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("IdUsuario")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

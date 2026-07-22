@@ -6,7 +6,6 @@ using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Modelos;
 using ProjetoIntegrador.Backend.Servicos;
-using BCrypt.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,10 +51,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.UseHttpsRedirection();
 

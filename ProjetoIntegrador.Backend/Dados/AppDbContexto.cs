@@ -8,6 +8,7 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
     public DbSet<Contato> Contatos { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Alerta> Alertas { get; set; }
+    public DbSet<Receita> Receitas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -43,6 +44,21 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
             entidade.Property("Senha").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             entidade.Property("Username").HasColumnType("varchar").HasMaxLength(30).IsRequired();
             entidade.HasIndex("Username").IsUnique();
+        });
+
+        modelBuilder.Entity<Receita>(entidade =>
+        {
+            entidade.Property(e => e.Titulo).IsRequired().HasMaxLength(150);
+            entidade.Property(e => e.ImagemUrl).IsRequired().HasMaxLength(500);
+            entidade.Property(e => e.TagRestricao).HasMaxLength(50).IsRequired(false);
+            entidade.Property(e => e.TempoPreparoMinutos).IsRequired();
+            entidade.Property(e => e.Dificuldade).IsRequired().HasMaxLength(30);
+            entidade.OwnsOne(r => r.Macros, macro =>
+            {
+                macro.Property(m => m.ProteinaPorcentagem).HasColumnName("ProteinaPorcentagem").IsRequired();
+                macro.Property(m => m.CarboidratosPorcentagem).HasColumnName("CarboidratosPorcentagem").IsRequired();
+                macro.Property(m => m.GordurasPorcentagem).HasColumnName("GordurasPorcentagem").IsRequired();
+            });
         });
     }
 }

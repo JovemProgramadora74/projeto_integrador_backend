@@ -20,3 +20,10 @@ public class MacrosNutricionais
     public int CarboidratosPorcentagem { get; private set; }
     public int GordurasPorcentagem { get; private set; }
 }
+
+public class MacrosDto
+{
+    public int ProteinaPorcentagem { get; set; }
+    public int CarboidratosPorcentagem { get; set; }
+    public int GordurasPorcentagem { get; set; }
+}

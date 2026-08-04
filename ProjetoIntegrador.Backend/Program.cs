@@ -21,6 +21,7 @@ builder.Services.AddScoped<AlertaServico>();
 builder.Services.AddScoped<ContatoServico>();
 builder.Services.AddScoped<UsuarioServico>();
 builder.Services.AddScoped<TokenServico>();
+builder.Services.AddScoped<ReceitaServico>();
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_TOKEN_KEY") ??
              throw new Exception("A chave JWT não está configurada corretamente!");
@@ -40,8 +41,8 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
@@ -60,6 +61,11 @@ app.UseAuthorization();
 
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
+
+app.MapGet("/receitas", async (ReceitaServico receitaServico) => {
+    var receitasDto = await receitaServico.ObterTodasReceitasAsync();
+    return Results.Ok(receitasDto);
+}).WithName("PegarReceitas");
 
 app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servico) =>
     {

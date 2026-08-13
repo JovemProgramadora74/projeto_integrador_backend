@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.DTOs;
 using ProjetoIntegrador.Backend.Enums;
+using ProjetoIntegrador.Backend.Extensoes;
 using ProjetoIntegrador.Backend.Modelos;
 using ProjetoIntegrador.Backend.Servicos;
 
@@ -70,10 +71,14 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// ==========================================
 // --- Endpoints ---
+// ==========================================
 
 app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
     .WithName("PegarStatusServidor");
+
+// --- Receitas ---
 
 app.MapGet("/receitas", async (ReceitaServico receitaServico) =>
 {
@@ -109,6 +114,62 @@ app.MapGet("/receitas/{id:int}", (int id) =>
 
     return Results.Ok(receitaEstatica);
 }).WithName("PegarReceitaPorId");
+
+// --- Favoritos (Autenticados) ---
+
+app.MapGet("/receitas/favoritas", async (ClaimsPrincipal user, ReceitaServico receitaServico) =>
+    {
+        var usuarioId = user.ObterUsuarioId();
+        if (usuarioId is null) return Results.Unauthorized();
+
+        var favoritas = await receitaServico.ObterReceitasFavoritasPorUsuarioAsync(usuarioId.Value);
+        return Results.Ok(new
+        {
+            Receitas = favoritas
+        });
+    })
+    .WithName("PegarReceitasFavoritas")
+    .RequireAuthorization();
+
+app.MapPost("/receitas/{id:int}/favoritar", async (int id, ClaimsPrincipal user, ReceitaServico receitaServico) =>
+    {
+        var strUsuarioId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? user.FindFirst("sub")?.Value;
+        if (!int.TryParse(strUsuarioId, out var usuarioId))
+            return Results.Unauthorized();
+
+        try
+        {
+            await receitaServico.FavoritarReceitaAsync(usuarioId, id);
+            return Results.Ok(new { message = "Receita adicionada aos favoritos com sucesso!" });
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(new { message = e.Message });
+        }
+    })
+    .WithName("FavoritarReceita")
+    .RequireAuthorization();
+
+app.MapDelete("/receitas/{id:int}/favoritar", async (int id, ClaimsPrincipal user, ReceitaServico receitaServico) =>
+    {
+        var strUsuarioId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? user.FindFirst("sub")?.Value;
+        if (!int.TryParse(strUsuarioId, out var usuarioId))
+            return Results.Unauthorized();
+
+        try
+        {
+            await receitaServico.DesfavoritarReceitaAsync(usuarioId, id);
+            return Results.Ok(new { message = "Receita removida dos favoritos com sucesso!" });
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(new { message = e.Message });
+        }
+    })
+    .WithName("DesfavoritarReceita")
+    .RequireAuthorization();
+
+// --- Usuário ---
 
 app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servico) =>
     {
@@ -146,31 +207,7 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
     }
 }).WithName("FazerLogin");
 
-app.MapGet("/receitas/favoritas", async (ClaimsPrincipal user, ReceitaServico receitaServico) =>
-    {
-        var usuarioId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                        ?? user.FindFirst("sub")?.Value;
-
-        if (string.IsNullOrEmpty(usuarioId)) return Results.Unauthorized();
-
-        var todasReceitas = await receitaServico.ObterReceitasFavoritasPorUsuarioAsync(usuarioId);
-
-        if (todasReceitas.Count == 0) return Results.Ok(Enumerable.Empty<object>());
-
-        var random = new Random();
-        var quantidade = random.Next(3, 6);
-
-        var receitasFavoritas = todasReceitas
-            .OrderBy(_ => random.Next())
-            .Take(quantidade);
-
-        return Results.Ok(new
-        {
-            Receitas = receitasFavoritas
-        });
-    })
-    .WithName("PegarReceitasFavoritas")
-    .RequireAuthorization();
+// --- Outros Serviços ---
 
 app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servico) =>
     {

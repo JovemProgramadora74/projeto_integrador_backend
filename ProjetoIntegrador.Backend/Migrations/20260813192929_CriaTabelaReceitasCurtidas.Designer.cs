@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoIntegrador.Backend.Dados;
 
@@ -10,9 +11,11 @@ using ProjetoIntegrador.Backend.Dados;
 namespace ProjetoIntegrador.Backend.Migrations
 {
     [DbContext(typeof(AppDbContexto))]
-    partial class AppDbContextoModelSnapshot : ModelSnapshot
+    [Migration("20260813192929_CriaTabelaReceitasCurtidas")]
+    partial class CriaTabelaReceitasCurtidas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace ProjetoIntegrador.Backend.Migrations
 
                     b.HasIndex("ReceitaId");
 
-                    b.ToTable("ReceitasFavoritas");
+                    b.ToTable("ReceitaFavoritas");
                 });
 
             modelBuilder.Entity("ProjetoIntegrador.Backend.Modelos.Usuario", b =>

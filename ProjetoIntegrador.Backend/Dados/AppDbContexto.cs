@@ -9,7 +9,7 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Alerta> Alertas { get; set; }
     public DbSet<Receita> Receitas { get; set; }
-    public DbSet<ReceitaFavorita> ReceitaFavoritas { get; set; }
+    public DbSet<ReceitaFavorita> ReceitasFavoritas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

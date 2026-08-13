@@ -9,6 +9,7 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Alerta> Alertas { get; set; }
     public DbSet<Receita> Receitas { get; set; }
+    public DbSet<ReceitaFavorita> ReceitaFavoritas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +60,21 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
                 macro.Property(m => m.CarboidratosPorcentagem).HasColumnName("CarboidratosPorcentagem").IsRequired();
                 macro.Property(m => m.GordurasPorcentagem).HasColumnName("GordurasPorcentagem").IsRequired();
             });
+        });
+
+        modelBuilder.Entity<ReceitaFavorita>(entidade =>
+        {
+            entidade.HasKey(e => new { e.UsuarioId, e.ReceitaId });
+
+            entidade.HasOne(r => r.Usuario)
+                .WithMany(u => u.ReceitasFavoritas)
+                .HasForeignKey(rf => rf.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entidade.HasOne(rf => rf.Receita)
+                .WithMany(r => r.FavoritadoPor)
+                .HasForeignKey(rf => rf.ReceitaId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

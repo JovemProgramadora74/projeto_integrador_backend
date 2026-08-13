@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Backend.Dados;
+using ProjetoIntegrador.Backend.DTOs;
 using ProjetoIntegrador.Backend.Modelos;
 
 namespace ProjetoIntegrador.Backend.Servicos;

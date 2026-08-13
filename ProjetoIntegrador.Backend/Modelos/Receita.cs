@@ -2,6 +2,8 @@
 
 public class Receita
 {
+    public readonly List<ReceitaFavorita> FavoritadoPor = [];
+
     protected Receita()
     {
     }
@@ -23,8 +25,6 @@ public class Receita
     public string? TagRestricao { get; private set; }
     public int TempoPreparoMinutos { get; private set; }
     public string Dificuldade { get; private set; } = string.Empty;
-
-    // Propriedade de Navegação do Objeto de Valor
     public MacrosNutricionais Macros { get; private set; } = null!;
 
     private void ValidarInserirTitulo(string titulo)
@@ -58,15 +58,4 @@ public class Receita
 
         Dificuldade = dificuldade;
     }
-}
-
-public class ReceitaExibicaoDto
-{
-    public int Id { get; set; }
-    public string Titulo { get; set; } = string.Empty;
-    public string ImagemUrl { get; set; } = string.Empty;
-    public string? TagRestricao { get; set; }
-    public int TempoPreparoMinutos { get; set; }
-    public string Dificuldade { get; set; } = string.Empty;
-    public MacrosDto Macros { get; set; } = new();
 }

@@ -4,6 +4,8 @@ namespace ProjetoIntegrador.Backend.Modelos;
 
 public class Usuario
 {
+    public readonly List<ReceitaFavorita> ReceitasFavoritas = [];
+
     protected Usuario()
     {
     }
@@ -22,7 +24,6 @@ public class Usuario
     public string Senha { get; private set; }
     public string Username { get; private set; } = string.Empty;
     public DateTime CriadoEm { get; private set; } = DateTime.UtcNow;
-
 
     private void InserirNome(string nome)
     {
@@ -73,18 +74,4 @@ public class Usuario
 
         Username = username;
     }
-}
-
-public class UsuarioCadastroDto
-{
-    public string Nome { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Senha { get; set; } = string.Empty;
-    public string Username { get; set; } = string.Empty;
-}
-
-public class UsuarioLoginDto
-{
-    public string Email { get; set; } = string.Empty;
-    public string Senha { get; set; } = string.Empty;
 }

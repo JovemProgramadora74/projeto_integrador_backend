@@ -7,6 +7,7 @@ using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.DTOs;
 using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Extensoes;
+using ProjetoIntegrador.Backend.Middlewares;
 using ProjetoIntegrador.Backend.Modelos;
 using ProjetoIntegrador.Backend.Servicos;
 
@@ -14,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-var stringConexao = Environment.GetEnvironmentVariable("MYSQL_URL") ?? throw new InvalidOperationException("A variável de ambiente MYSQL_URL não foi configurada.");
+var stringConexao = Environment.GetEnvironmentVariable("MYSQL_URL") ??
+                    throw new InvalidOperationException("A variável de ambiente MYSQL_URL não foi configurada.");
 
 builder.Services.AddDbContext<AppDbContexto>(options => { options.UseMySQL(stringConexao); });
 
@@ -57,9 +59,10 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseMiddleware<ErroMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
-    Console.WriteLine("Modo Desenvolvimento");
     app.MapOpenApi();
     app.UseCors("LiberarAlunos");
     app.UseStaticFiles();
@@ -136,15 +139,8 @@ app.MapPost("/receitas/{id:int}/favoritar", async (int id, ClaimsPrincipal user,
         if (!int.TryParse(strUsuarioId, out var usuarioId))
             return Results.Unauthorized();
 
-        try
-        {
-            await receitaServico.FavoritarReceitaAsync(usuarioId, id);
-            return Results.Ok(new { message = "Receita adicionada aos favoritos com sucesso!" });
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(new { message = e.Message });
-        }
+        await receitaServico.FavoritarReceitaAsync(usuarioId, id);
+        return Results.Ok(new { message = "Receita adicionada aos favoritos com sucesso!" });
     })
     .WithName("FavoritarReceita")
     .RequireAuthorization();
@@ -155,15 +151,8 @@ app.MapDelete("/receitas/{id:int}/favoritar", async (int id, ClaimsPrincipal use
         if (!int.TryParse(strUsuarioId, out var usuarioId))
             return Results.Unauthorized();
 
-        try
-        {
-            await receitaServico.DesfavoritarReceitaAsync(usuarioId, id);
-            return Results.Ok(new { message = "Receita removida dos favoritos com sucesso!" });
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(new { message = e.Message });
-        }
+        await receitaServico.DesfavoritarReceitaAsync(usuarioId, id);
+        return Results.Ok(new { message = "Receita removida dos favoritos com sucesso!" });
     })
     .WithName("DesfavoritarReceita")
     .RequireAuthorization();
@@ -172,72 +161,42 @@ app.MapDelete("/receitas/{id:int}/favoritar", async (int id, ClaimsPrincipal use
 
 app.MapPost("/cadastrar", async (UsuarioCadastroDto dados, UsuarioServico servico) =>
     {
-        try
-        {
-            var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
-            await servico.AddAsync(cadastro);
-            return Results.Created();
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(new { message = e.Message });
-        }
+        var cadastro = new Usuario(dados.Nome, dados.Email, dados.Senha, dados.Username);
+        await servico.AddAsync(cadastro);
+        return Results.Created();
     })
     .WithName("InserirDadosUsuario");
 
 app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 {
-    try
+    var usuario = await servico.LoginAsync(dados);
+    var resultado = TokenServico.CriarToken(usuario);
+    return Results.Ok(new
     {
-        var usuario = await servico.LoginAsync(dados);
-        var resultado = TokenServico.CriarToken(usuario);
-        return Results.Ok(new
-        {
-            usuario.Id,
-            usuario.Nome,
-            usuario.Email,
-            resultado.Token,
-            resultado.ExpiresAt
-        });
-    }
-    catch (Exception e)
-    {
-        return Results.BadRequest(new { message = e.Message });
-    }
+        usuario.Nome,
+        resultado.Token,
+        resultado.ExpiresAt
+    });
 }).WithName("FazerLogin");
 
 // --- Outros Serviços ---
 
 app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servico) =>
     {
-        try
-        {
-            var contatoEmergencia =
-                new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email, dados.IdUsuario);
-            await servico.AddAsync(contatoEmergencia);
-            return Results.Created();
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(new { message = e.Message });
-        }
+        var contatoEmergencia =
+            new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email, dados.IdUsuario);
+        await servico.AddAsync(contatoEmergencia);
+        return Results.Created();
     })
     .WithName("CadastrarContato")
     .RequireAuthorization();
 
 app.MapPost("/alerta", async (AlertaDto dados, AlertaServico servico) =>
     {
-        try
-        {
-            var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow, dados.Latitude, dados.Longitude,
-                dados.PrecisaoGps, Status.Ativo);
-            await servico.AddAsync(alertaDados);
-            return Results.Created();
-        }
-        catch (Exception e)
-        {
-            return Results.BadRequest(new { message = e.Message });
-        }
+        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow, dados.Latitude, dados.Longitude,
+            dados.PrecisaoGps, Status.Ativo);
+        await servico.AddAsync(alertaDados);
+        return Results.Created();
     })
     .WithName("DispararAlerta")
     .RequireAuthorization();

@@ -68,4 +68,12 @@ public class Contato
 
         UsuarioId = idUsuario;
     }
+
+    public void AtualizarContato(string nome, string vinculo, string telefone, string email)
+    {
+        InserirNome(nome);
+        InserirVinculo(vinculo);
+        InserirTelefone(telefone);
+        InserirEmail(email);
+    }
 }

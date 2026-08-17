@@ -18,10 +18,10 @@ public class AlertaServico(AppDbContexto contexto)
 
         if (alerta is null)
             throw new Exception("Alerta não encontrado.");
-        
+
         if (alerta.UsuarioId != usuarioId)
             throw new Exception("Você não tem permissão para alterar este alerta.");
-        
+
         alerta.AtualizarStatus(novoStatus);
         await contexto.SaveChangesAsync();
     }

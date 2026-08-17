@@ -76,7 +76,7 @@ public class Alerta
     {
         if (novoStatus.HasValue && !Enum.IsDefined(typeof(Status), novoStatus.Value))
             throw new Exception("O status fornecido é inválido. Use: 0 (Ativo), 1 (Atendido) ou 2 (FalsoAlarme).");
-        
+
         if (novoStatus != null) Status = novoStatus.Value;
     }
 }

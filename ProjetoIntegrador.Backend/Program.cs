@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.DTOs;
-using ProjetoIntegrador.Backend.Enums;
 using ProjetoIntegrador.Backend.Extensoes;
 using ProjetoIntegrador.Backend.Middlewares;
 using ProjetoIntegrador.Backend.Modelos;
@@ -181,21 +180,46 @@ app.MapPost("/login", async (UsuarioLoginDto dados, UsuarioServico servico) =>
 
 // --- Outros Serviços ---
 
-app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servico) =>
+app.MapPost("/contato/cadastrar", async (ContatoDto dados, ClaimsPrincipal user, ContatoServico servico) =>
     {
+        var usuarioId = user.ObterUsuarioId();
+        if (usuarioId is null) return Results.Unauthorized();
+
         var contatoEmergencia =
-            new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email, dados.IdUsuario);
+            new Contato(dados.Nome, dados.Vinculo, dados.Telefone, dados.Email, usuarioId.Value);
         await servico.AddAsync(contatoEmergencia);
         return Results.Created();
     })
     .WithName("CadastrarContato")
     .RequireAuthorization();
 
+app.MapPut("/contato/{id:int}", async (int id, ContatoDto dados, ClaimsPrincipal user, ContatoServico servico) =>
+    {
+        var usuarioId = user.ObterUsuarioId();
+        if (usuarioId is null) return Results.Unauthorized();
+
+        await servico.AtualizarAsync(id, usuarioId.Value, dados);
+        return Results.Ok(new { message = "Contato atualizado com sucesso!" });
+    })
+    .WithName("AtualizarContato")
+    .RequireAuthorization();
+
+app.MapDelete("/contato/{id:int}", async (int id, ClaimsPrincipal user, ContatoServico servico) =>
+    {
+        var usuarioId = user.ObterUsuarioId();
+        if (usuarioId is null) return Results.Unauthorized();
+
+        await servico.RemoverAsync(id, usuarioId.Value);
+        return Results.Ok(new { message = "Contato removido com sucesso!" });
+    })
+    .WithName("RemoverContato")
+    .RequireAuthorization();
+
 app.MapPost("/alerta", async (AlertaDto dados, ClaimsPrincipal user, AlertaServico servico) =>
     {
         var usuarioId = user.ObterUsuarioId();
         if (usuarioId is null) return Results.Unauthorized();
-        
+
         var alertaDados = new Alerta(usuarioId.Value, DateTime.UtcNow, dados.Latitude, dados.Longitude,
             dados.PrecisaoGps);
         await servico.AddAsync(alertaDados);
@@ -213,7 +237,7 @@ app.MapPatch("/alerta/{id:int}/status",
             if (dados.NovoStatus is null)
                 return Results.BadRequest(new
                     { message = "O campo 'novoStatus' é obrigatório e deve ser: 1 (Atendido) ou 2 (FalsoAlarme)." });
-            
+
             await servico.AtualizarStatusAsync(id, usuarioId.Value, dados.NovoStatus.Value);
 
             return Results.Ok(new { message = "Status do alerta atualizado com sucesso!" });

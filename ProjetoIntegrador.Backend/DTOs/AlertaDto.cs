@@ -1,6 +1,4 @@
-﻿using ProjetoIntegrador.Backend.Enums;
-
-namespace ProjetoIntegrador.Backend.DTOs;
+﻿namespace ProjetoIntegrador.Backend.DTOs;
 
 public class AlertaDto
 {

@@ -14,8 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-var stringConexao = Environment.GetEnvironmentVariable("MYSQL_URL");
-ArgumentNullException.ThrowIfNull(stringConexao);
+var stringConexao = Environment.GetEnvironmentVariable("MYSQL_URL") ?? throw new InvalidOperationException("A variável de ambiente MYSQL_URL não foi configurada.");
 
 builder.Services.AddDbContext<AppDbContexto>(options => { options.UseMySQL(stringConexao); });
 
@@ -26,7 +25,7 @@ builder.Services.AddScoped<TokenServico>();
 builder.Services.AddScoped<ReceitaServico>();
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_TOKEN_KEY") ??
-             throw new Exception("A chave JWT não está configurada corretamente!");
+             throw new InvalidOperationException("A variavel de ambiente JWT_TOKEN_KEY não foi configurada.");
 
 var key = Encoding.UTF8.GetBytes(jwtKey);
 

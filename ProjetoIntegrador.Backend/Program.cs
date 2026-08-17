@@ -191,14 +191,34 @@ app.MapPost("/contato/cadastrar", async (ContatoDto dados, ContatoServico servic
     .WithName("CadastrarContato")
     .RequireAuthorization();
 
-app.MapPost("/alerta", async (AlertaDto dados, AlertaServico servico) =>
+app.MapPost("/alerta", async (AlertaDto dados, ClaimsPrincipal user, AlertaServico servico) =>
     {
-        var alertaDados = new Alerta(dados.IdUsuario, DateTime.UtcNow, dados.Latitude, dados.Longitude,
-            dados.PrecisaoGps, Status.Ativo);
+        var usuarioId = user.ObterUsuarioId();
+        if (usuarioId is null) return Results.Unauthorized();
+        
+        var alertaDados = new Alerta(usuarioId.Value, DateTime.UtcNow, dados.Latitude, dados.Longitude,
+            dados.PrecisaoGps);
         await servico.AddAsync(alertaDados);
         return Results.Created();
     })
     .WithName("DispararAlerta")
+    .RequireAuthorization();
+
+app.MapPatch("/alerta/{id:int}/status",
+        async (int id, AlertaStatusDto dados, ClaimsPrincipal user, AlertaServico servico) =>
+        {
+            var usuarioId = user.ObterUsuarioId();
+            if (usuarioId is null) return Results.Unauthorized();
+
+            if (dados.NovoStatus is null)
+                return Results.BadRequest(new
+                    { message = "O campo 'novoStatus' é obrigatório e deve ser: 1 (Atendido) ou 2 (FalsoAlarme)." });
+            
+            await servico.AtualizarStatusAsync(id, usuarioId.Value, dados.NovoStatus.Value);
+
+            return Results.Ok(new { message = "Status do alerta atualizado com sucesso!" });
+        })
+    .WithName("AtualizarStatusAlerta")
     .RequireAuthorization();
 
 app.Run();

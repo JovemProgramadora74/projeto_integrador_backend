@@ -14,14 +14,14 @@ public class Alerta
         decimal latitude,
         decimal longitude,
         decimal precisaoGps,
-        Status? status)
+        Status status = Status.Ativo)
     {
         InserirIdUsuario(idUsuario);
         InserirDataHoraDisparo(dataHoraDisparo);
         InserirLatitude(latitude);
         InserirLongitude(longitude);
         InserirPrecisaoGps(precisaoGps);
-        InserirStatus(status);
+        Status = status;
     }
 
     public int Id { get; private set; }
@@ -72,19 +72,11 @@ public class Alerta
         PrecisaoGps = precisaoGps;
     }
 
-    private void InserirStatus(Status? status)
+    public void AtualizarStatus(Status? novoStatus)
     {
-        switch (status)
-        {
-            case Status.FalsoAlarme:
-                Status = Status.FalsoAlarme;
-                break;
-            case Status.Atendido:
-                Status = Status.Atendido;
-                break;
-            default:
-                Status = Status.Ativo;
-                break;
-        }
+        if (novoStatus.HasValue && !Enum.IsDefined(typeof(Status), novoStatus.Value))
+            throw new Exception("O status fornecido é inválido. Use: 0 (Ativo), 1 (Atendido) ou 2 (FalsoAlarme).");
+        
+        if (novoStatus != null) Status = novoStatus.Value;
     }
 }

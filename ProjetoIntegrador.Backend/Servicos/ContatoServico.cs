@@ -1,4 +1,5 @@
-﻿using ProjetoIntegrador.Backend.Dados;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.DTOs;
 using ProjetoIntegrador.Backend.Modelos;
 
@@ -38,5 +39,21 @@ public class ContatoServico(AppDbContexto contexto)
 
         contexto.Contatos.Remove(contato);
         await contexto.SaveChangesAsync();
+    }
+
+    public async Task<IReadOnlyList<ContatoRespostaDto>> PegarContatosPorUsuarioIdAsync(int usuarioId)
+    {
+        return await contexto.Contatos
+            .AsNoTracking()
+            .Where(contato => contato.UsuarioId == usuarioId)
+            .Select(c => new ContatoRespostaDto
+            {
+                Id = c.Id,
+                Email = c.Email,
+                Nome = c.Nome,
+                Vinculo = c.Vinculo,
+                Telefone = c.Telefone
+            })
+            .ToListAsync();
     }
 }

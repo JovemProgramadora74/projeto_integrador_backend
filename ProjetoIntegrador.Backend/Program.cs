@@ -93,7 +93,7 @@ app.MapGet("/receitas/{id:int}", (int id) =>
     {
         Id = id,
         Titulo = "Bolo de Cenoura Estático (Teste)",
-        ImagemUrl = "http://senac47278.local/imagens/receita_1.jpg",
+        ImagemUrl = "http://sraedu41780.local/imagens/receita_1.jpg",
         TempoPreparoMinutos = 60,
         Dificuldade = "Médio",
         Rendimento = "15 porções",
@@ -191,6 +191,17 @@ app.MapPost("/contato/cadastrar", async (ContatoDto dados, ClaimsPrincipal user,
         return Results.Created();
     })
     .WithName("CadastrarContato")
+    .RequireAuthorization();
+
+app.MapGet("/contato/meu", async (ClaimsPrincipal user, ContatoServico contatoServico) =>
+    {
+        var usuarioId = user.ObterUsuarioId();
+        if (usuarioId is null) return Results.Unauthorized();
+
+        var meusContatos = await contatoServico.PegarContatosPorUsuarioIdAsync(usuarioId.Value);
+        return Results.Ok(meusContatos);
+    })
+    .WithName("PegarMeusContatos")
     .RequireAuthorization();
 
 app.MapPut("/contato/{id:int}", async (int id, ContatoDto dados, ClaimsPrincipal user, ContatoServico servico) =>

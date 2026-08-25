@@ -83,4 +83,25 @@ public class ReceitaServico(AppDbContexto contexto)
         contexto.ReceitasFavoritas.Remove(favorito);
         await contexto.SaveChangesAsync();
     }
+
+    public async Task<ReceitaCompletaDto?> ObterReceitaCompletaPorIdAsync(int id)
+    {
+        return await contexto.Receitas.Select(receita => new ReceitaCompletaDto
+        {
+            Id = id,
+            Titulo = receita.Titulo,
+            ImagemUrl = receita.ImagemUrl,
+            TagRestricao = receita.TagRestricao,
+            TempoPreparoMinutos = receita.TempoPreparoMinutos,
+            Dificuldade = receita.Dificuldade,
+            Macros = new MacrosDto
+            {
+                CarboidratosPorcentagem = receita.Macros.CarboidratosPorcentagem,
+                GordurasPorcentagem = receita.Macros.GordurasPorcentagem,
+                ProteinaPorcentagem = receita.Macros.ProteinaPorcentagem,
+            },
+            Ingredientes = receita.Ingredientes,
+            Passos = receita.Passos,
+        }).FirstOrDefaultAsync(receita => receita.Id == id);
+    }
 }

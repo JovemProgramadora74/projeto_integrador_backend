@@ -27,7 +27,9 @@ public class Receita
     public int TempoPreparoMinutos { get; private set; }
     public string Dificuldade { get; private set; } = string.Empty;
     public MacrosNutricionais Macros { get; private set; } = null!;
+    public List<string> Ingredientes { get; set; } = [];
     public List<string> Passos { get; set; } = [];
+    
 
 
     private void ValidarInserirTitulo(string titulo)

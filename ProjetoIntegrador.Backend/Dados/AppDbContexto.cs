@@ -62,6 +62,18 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
                 macro.Property(m => m.CarboidratosPorcentagem).HasColumnName("CarboidratosPorcentagem").IsRequired();
                 macro.Property(m => m.GordurasPorcentagem).HasColumnName("GordurasPorcentagem").IsRequired();
             });
+            entidade.Property(e => e.Ingredientes).HasColumnType("json")
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),
+                    v => JsonSerializer.Deserialize<List<string>>(v,
+                        (JsonSerializerOptions)null!) ?? new List<string>());
+            entidade.Property(r => r.Ingredientes)
+                .Metadata
+                .SetValueComparer(new ValueComparer<List<string>>(
+                    (c1, c2) => c1!.SequenceEqual(c2!),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => c.ToList()
+                ));
             entidade.Property(e => e.Passos).HasColumnType("json")
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),

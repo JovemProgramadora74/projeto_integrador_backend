@@ -9,7 +9,7 @@ public class Receita
     }
 
     public Receita(string titulo, string imagemUrl, string? tagRestricao, int tempoPreparoMinutos, string dificuldade,
-        MacrosNutricionais macros)
+        MacrosNutricionais macros, List<string> passos)
     {
         ValidarInserirTitulo(titulo);
         ValidarInserirImagemUrl(imagemUrl);
@@ -17,6 +17,7 @@ public class Receita
         ValidarInserirTempoPreparo(tempoPreparoMinutos);
         ValidarInserirDificuldade(dificuldade);
         Macros = macros ?? throw new Exception("Os dados macro-nutricionais não podem ser nulos!");
+        Passos = passos ?? throw new Exception("O passo a passo não pode ser nulo!");
     }
 
     public int Id { get; private set; }
@@ -26,6 +27,8 @@ public class Receita
     public int TempoPreparoMinutos { get; private set; }
     public string Dificuldade { get; private set; } = string.Empty;
     public MacrosNutricionais Macros { get; private set; } = null!;
+    public List<string> Passos { get; set; } = [];
+
 
     private void ValidarInserirTitulo(string titulo)
     {

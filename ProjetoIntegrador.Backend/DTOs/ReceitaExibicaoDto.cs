@@ -8,5 +8,6 @@ public class ReceitaExibicaoDto
     public string? TagRestricao { get; set; }
     public int TempoPreparoMinutos { get; set; }
     public string Dificuldade { get; set; } = string.Empty;
+    public bool Curtido { get; set; }
     public MacrosDto Macros { get; set; } = new();
 }

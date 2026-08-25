@@ -7,7 +7,7 @@ namespace ProjetoIntegrador.Backend.Servicos;
 
 public class ReceitaServico(AppDbContexto contexto)
 {
-    public async Task<IReadOnlyList<ReceitaExibicaoDto>> ObterTodasReceitasAsync()
+    public async Task<IReadOnlyList<ReceitaExibicaoDto>> ObterTodasReceitasAsync(int? usuarioId)
     {
         return await contexto.Receitas
             .Select(r => new ReceitaExibicaoDto
@@ -18,6 +18,7 @@ public class ReceitaServico(AppDbContexto contexto)
                 TagRestricao = r.TagRestricao,
                 TempoPreparoMinutos = r.TempoPreparoMinutos,
                 Dificuldade = r.Dificuldade,
+                Curtido = usuarioId != null && r.FavoritadoPor.Any(c => c.UsuarioId == usuarioId),
                 Macros = new MacrosDto
                 {
                     ProteinaPorcentagem = r.Macros.ProteinaPorcentagem,
@@ -40,6 +41,7 @@ public class ReceitaServico(AppDbContexto contexto)
                 TagRestricao = rf.Receita.TagRestricao,
                 TempoPreparoMinutos = rf.Receita.TempoPreparoMinutos,
                 Dificuldade = rf.Receita.Dificuldade,
+                Curtido = rf.UsuarioId == usuarioId,
                 Macros = new MacrosDto
                 {
                     ProteinaPorcentagem = rf.Receita.Macros.ProteinaPorcentagem,

@@ -81,9 +81,11 @@ app.MapGet("/status", () => Results.Ok(new { status = "Servidor Online" }))
 
 // --- Receitas ---
 
-app.MapGet("/receitas", async (ReceitaServico receitaServico) =>
+app.MapGet("/receitas", async (ClaimsPrincipal user, ReceitaServico receitaServico) =>
 {
-    var receitasDto = await receitaServico.ObterTodasReceitasAsync();
+    var usuarioId = user.ObterUsuarioId();
+    
+    var receitasDto = await receitaServico.ObterTodasReceitasAsync(usuarioId);
     return Results.Ok(receitasDto);
 }).WithName("PegarReceitas");
 

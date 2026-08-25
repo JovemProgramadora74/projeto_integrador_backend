@@ -89,33 +89,11 @@ app.MapGet("/receitas", async (ClaimsPrincipal user, ReceitaServico receitaServi
     return Results.Ok(receitasDto);
 }).WithName("PegarReceitas");
 
-app.MapGet("/receitas/{id:int}", (int id) =>
+app.MapGet("/receitas/{id:int}", async (int id, ReceitaServico receitaServico) =>
 {
-    var receitaEstatica = new
-    {
-        Id = id,
-        Titulo = "Bolo de Cenoura Estático (Teste)",
-        ImagemUrl = "http://sraedu41780.local/imagens/receita_1.jpg",
-        TempoPreparoMinutos = 60,
-        Dificuldade = "Médio",
-        Rendimento = "15 porções",
-        Ingredientes = new[]
-        {
-            "3 cenouras médias",
-            "4 ovos",
-            "1 xícara de óleo",
-            "2 xícaras de açúcar",
-            "2 e 1/2 xícaras de farinha de trigo",
-            "1 colher de sopa de fermento"
-        },
-        ModoPreparo = new[]
-        {
-            "Bata as cenouras, ovos e óleo no liquidificador.",
-            "Misture os secos e asse por 40 minutos."
-        }
-    };
+    var receitaBuscada = await receitaServico.ObterReceitaCompletaPorIdAsync(id); 
 
-    return Results.Ok(receitaEstatica);
+    return Results.Ok(receitaBuscada);
 }).WithName("PegarReceitaPorId");
 
 // --- Favoritos (Autenticados) ---

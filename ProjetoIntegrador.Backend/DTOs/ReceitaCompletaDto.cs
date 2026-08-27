@@ -10,5 +10,5 @@ public class ReceitaCompletaDto
     public string Dificuldade { get; set; } = string.Empty;
     public MacrosDto Macros { get; set; } = new();
     public List<string> Ingredientes { get; set; } = [];
-    public List<string> Passos { get; set; } = [];
+    public List<string> ModoPreparo { get; set; } = [];
 }

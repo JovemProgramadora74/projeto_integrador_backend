@@ -86,22 +86,24 @@ public class ReceitaServico(AppDbContexto contexto)
 
     public async Task<ReceitaCompletaDto?> ObterReceitaCompletaPorIdAsync(int id)
     {
-        return await contexto.Receitas.Select(receita => new ReceitaCompletaDto
-        {
-            Id = id,
-            Titulo = receita.Titulo,
-            ImagemUrl = receita.ImagemUrl,
-            TagRestricao = receita.TagRestricao,
-            TempoPreparoMinutos = receita.TempoPreparoMinutos,
-            Dificuldade = receita.Dificuldade,
-            Macros = new MacrosDto
+        return await contexto.Receitas
+            .Where(receita => receita.Id == id)
+            .Select(receita => new ReceitaCompletaDto
             {
-                CarboidratosPorcentagem = receita.Macros.CarboidratosPorcentagem,
-                GordurasPorcentagem = receita.Macros.GordurasPorcentagem,
-                ProteinaPorcentagem = receita.Macros.ProteinaPorcentagem,
-            },
-            Ingredientes = receita.Ingredientes,
-            Passos = receita.Passos,
-        }).FirstOrDefaultAsync(receita => receita.Id == id);
+                Id = id,
+                Titulo = receita.Titulo,
+                ImagemUrl = receita.ImagemUrl,
+                TagRestricao = receita.TagRestricao,
+                TempoPreparoMinutos = receita.TempoPreparoMinutos,
+                Dificuldade = receita.Dificuldade,
+                Macros = new MacrosDto
+                {
+                    CarboidratosPorcentagem = receita.Macros.CarboidratosPorcentagem,
+                    GordurasPorcentagem = receita.Macros.GordurasPorcentagem,
+                    ProteinaPorcentagem = receita.Macros.ProteinaPorcentagem,
+                },
+                Ingredientes = receita.Ingredientes,
+                ModoPreparo = receita.Passos,
+            }).FirstAsync();
     }
 }

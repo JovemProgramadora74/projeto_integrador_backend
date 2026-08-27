@@ -20,9 +20,9 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
             entity.Property("Nome").HasColumnType("varchar(100)").IsRequired();
             entity.Property("Vinculo").HasColumnType("varchar(100)").IsRequired();
             entity.Property("Telefone").HasColumnType("varchar(11)").IsRequired();
-            entity.HasIndex("Telefone").IsUnique();
+            entity.HasIndex("Telefone");
             entity.Property("Email").HasColumnType("varchar(255)").IsRequired();
-            entity.HasIndex("Email").IsUnique();
+            entity.HasIndex("Email");
             entity.HasOne(e => e.Usuario)
                 .WithMany()
                 .HasForeignKey(e => e.UsuarioId);

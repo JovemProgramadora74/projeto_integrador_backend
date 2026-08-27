@@ -27,8 +27,6 @@ public class UsuarioServico(AppDbContexto contexto)
 
         var isValid = BCrypt.Net.BCrypt.Verify(dados.Senha, usuario.Senha);
 
-        if (!isValid) throw new Exception("Senha incorreta!");
-
-        return usuario;
+        return !isValid ? throw new Exception("Email e/ou senha incorreta!") : usuario;
     }
 }

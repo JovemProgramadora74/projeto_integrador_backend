@@ -32,7 +32,7 @@ public class AppDbContexto(DbContextOptions<AppDbContexto> options) : DbContext(
         {
             entidade.Property("Latitude").HasPrecision(10, 8).IsRequired();
             entidade.Property("Longitude").HasPrecision(10, 8).IsRequired();
-            entidade.Property("PrecisaoGps").HasPrecision(10, 8).IsRequired();
+            entidade.Property("PrecisaoGps").HasPrecision(10, 2).IsRequired();
             entidade.Property("Status").HasConversion<string>().IsRequired();
             entidade.HasOne(e => e.Usuario)
                 .WithMany()

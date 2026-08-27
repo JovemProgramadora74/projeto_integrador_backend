@@ -106,4 +106,9 @@ public class ReceitaServico(AppDbContexto contexto)
                 ModoPreparo = receita.Passos,
             }).FirstAsync();
     }
+
+    public async Task<IReadOnlyList<int>> ObterTodosIdsReceitasAsync()
+    {
+        return await contexto.Receitas.Select(r => r.Id).ToListAsync();
+    }
 }

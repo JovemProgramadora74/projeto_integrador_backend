@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using ProjetoIntegrador.Backend.Dados;
 using ProjetoIntegrador.Backend.DTOs;
@@ -56,6 +57,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("LiberarAlunos", policy => { policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
 });
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 app.UseMiddleware<ErroMiddleware>();
@@ -88,6 +91,66 @@ app.MapGet("/receitas", async (ClaimsPrincipal user, ReceitaServico receitaServi
     var receitasDto = await receitaServico.ObterTodasReceitasAsync(usuarioId);
     return Results.Ok(receitasDto);
 }).WithName("PegarReceitas");
+
+app.MapGet("/receitas/destaque", async (ReceitaServico receitaServico, IMemoryCache cache) =>
+{
+    const string cacheKey = "ReceitaDestaque";
+
+    if (cache.TryGetValue(cacheKey, out ReceitaCompletaDto? receitaDestaque)) return Results.Ok(receitaDestaque);
+    
+    var idsDisponiveis = await receitaServico.ObterTodosIdsReceitasAsync();
+    if (!idsDisponiveis.Any())
+    {
+        return Results.NotFound("Nenhuma receita encontrada para o sorteio.");
+    }
+        
+    var random = new Random();
+    var idSorteado = idsDisponiveis[random.Next(idsDisponiveis.Count)];
+        
+    receitaDestaque = await receitaServico.ObterReceitaCompletaPorIdAsync(idSorteado);
+
+    if (receitaDestaque == null)
+    {
+        return Results.NotFound("Receita sorteada não localizada.");
+    }
+        
+    var cacheEntryOptions = new MemoryCacheEntryOptions()
+        .SetAbsoluteExpiration(TimeSpan.FromHours(12));
+        
+    cache.Set(cacheKey, receitaDestaque, cacheEntryOptions);
+
+    return Results.Ok(receitaDestaque);
+}).WithName("PegarReceitaDestaque");
+
+app.MapGet("/receitas/escolhida", async (ReceitaServico receitaServico, IMemoryCache cache) =>
+{
+    const string cacheKey = "ReceitaEscolhidaChef";
+
+    if (cache.TryGetValue(cacheKey, out ReceitaCompletaDto? receitaEscolhidaChef)) return Results.Ok(receitaEscolhidaChef);
+    
+    var idsDisponiveis = await receitaServico.ObterTodosIdsReceitasAsync();
+    if (!idsDisponiveis.Any())
+    {
+        return Results.NotFound("Nenhuma receita encontrada para o sorteio.");
+    }
+        
+    var random = new Random();
+    var idSorteado = idsDisponiveis[random.Next(idsDisponiveis.Count)];
+        
+    receitaEscolhidaChef = await receitaServico.ObterReceitaCompletaPorIdAsync(idSorteado);
+
+    if (receitaEscolhidaChef == null)
+    {
+        return Results.NotFound("Receita sorteada não localizada.");
+    }
+        
+    var cacheEntryOptions = new MemoryCacheEntryOptions()
+        .SetAbsoluteExpiration(TimeSpan.FromHours(12));
+        
+    cache.Set(cacheKey, receitaEscolhidaChef, cacheEntryOptions);
+
+    return Results.Ok(receitaEscolhidaChef);
+}).WithName("PegarReceitaEscolhaChef");
 
 app.MapGet("/receitas/{id:int}", async (int id, ReceitaServico receitaServico) =>
 {
